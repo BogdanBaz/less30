@@ -1,0 +1,84 @@
+
+
+**********************************************************************************************
+
+_______________________ in_MAiN  
+
+final private int COLOR = 1;
+final private int GRAVITY = 2;
+\\\\\\\
+
+    public void onClick(View v) {
+        Intent intent;
+        switch (v.getId()) {
+            case R.id.btnColor:
+                intent = new Intent(this, activity_color.class);
+                startActivityForResult(intent, COLOR);
+                break;
+            case R.id.btnGravity:
+                intent = new Intent(this, activity_Gravity.class);
+                startActivityForResult(intent, GRAVITY);
+                break;
+        }
+    }
+
+    @SuppressLint("RtlHardcoded")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+	if (data != null) {
+            switch (requestCode) {
+                case COLOR:
+
+// *** если не найдет обьекта с именем " color" -> по дефолту установит белый цвет 
+
+                    textView.setTextColor(data.getIntExtra("color", Color.WHITE));
+                    break;
+
+                case GRAVITY:
+                    textView.setGravity(data.getIntExtra("gravity", Gravity.LEFT));
+                    break;
+            }
+
+        }
+
+// * если ничего не выбрали и нажали назад - получаем resultCode = RESULT_CANCELED
+
+        if (resultCode == RESULT_CANCELED) {
+
+            textView.setTextColor(Color.BLACK);
+            textView.setGravity(Gravity.CENTER);
+            Toast.makeText(MainActivity.this, "Any button", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+}
+
+_________________________ in 2ndActivity.class 
+
+    public void onClick(View v) {
+        Intent intent = new Intent();
+        switch (v.getId()) {
+            case R.id.btnRed:
+
+                intent.putExtra("color", Color.RED);
+
+                setResult(RESULT_OK, intent);
+
+                break;
+
+            case R.id.btnBlue:
+                intent.putExtra("color", Color.BLUE);
+                setResult(RESULT_OK, intent);
+                break;
+            case R.id.btnGreen:
+                intent.putExtra("color", Color.GREEN);
+                setResult(RESULT_OK, intent);
+                break;
+        }
+
+        finish();
+
+
+    }
