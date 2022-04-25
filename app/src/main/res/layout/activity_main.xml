@@ -10,7 +10,7 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="120dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -19,7 +19,6 @@
             android:id="@+id/textView"
             android:layout_width="405dp"
             android:layout_height="51dp"
-            android:text="OUR_TEXT"
             android:textSize="30sp"
             tools:ignore="MissingConstraints" />
     </FrameLayout>
@@ -39,21 +38,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="COLOR" />
+            android:text="@string/color" />
 
         <Button
             android:id="@+id/btnGravity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="GRavity" />
+            android:text="@string/gravity" />
     </LinearLayout>
 
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/dr"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-    </androidx.drawerlayout.widget.DrawerLayout>
+
+    <Button
+        android:id="@+id/btn_en"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/en"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/btn_pl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pl"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

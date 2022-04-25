@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">less30</string>
+    <string name="color">COLOR</string>
+    <string name="gravity">GRavity</string>
+    <string name="red">RED</string>
+    <string name="blue">blue</string>
+    <string name="green">green</string>
+    <string name="left">LEFT</string>
+    <string name="center">Center</string>
+    <string name="right">right</string>
+    <string name="en" translatable="false">en</string>
+    <string name="pl" translatable="false">pl</string>
+    <string name="our_text">OUR_TEXT</string>
 </resources>

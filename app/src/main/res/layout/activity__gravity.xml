@@ -22,20 +22,20 @@
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:text="LEFT" />
+            android:text="@string/left" />
 
         <Button
             android:id="@+id/btnCenter"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:text="Center" />
+            android:text="@string/center" />
 
         <Button
             android:id="@+id/btnRight"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:text="right" />
+            android:text="@string/right" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
