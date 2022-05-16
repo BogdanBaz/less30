@@ -69,6 +69,7 @@ import com.jcraft.jsch.SftpProgressMonitor;
 import org.apache.sshd.server.SshServer;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -276,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int portNum = 22;
 
         JSch jsch = new JSch();
+        jsch.addIdentity();
         Session session = null;
 
         String knownHostsDir = "/root/es/pax/im30/FFFFFFFFFFFF/";
@@ -303,6 +305,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
            //sftpChannel.get( fileName);
 
+// DOWNLOAD
             InputStream stream =  sftpChannel.get("/root/es/pax/im30/FFFFFFFFFFFF/task.json");
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
@@ -310,6 +313,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .lines().collect(Collectors.joining("\n"));
                 System.out.println("RES - " + result);
             }
+
+// PUT
+            sftpChannel.put(new ByteArrayInputStream("Halo halo ".getBytes()),"/root/es/pax/im30/FFFFFFFFFFFF/11.txt");
+
+// DELETE
+            sftpChannel.rm("/root/es/pax/im30/FFFFFFFFFFFF/11.txt");
+
+
 
             //Log.d(fileName, "has been downloaded");
 
@@ -322,6 +333,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
     }
+
+
+
+
+
 
 
     @Override
