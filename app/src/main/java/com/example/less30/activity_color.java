@@ -29,6 +29,7 @@ public class activity_color extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.btnRed:
+                int z = Integer.parseInt("zzz");
                 intent.putExtra("color", Color.RED);
                 setResult(RESULT_OK, intent);
                 break;

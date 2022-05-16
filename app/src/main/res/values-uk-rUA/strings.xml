@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">УРОК_30</string>
+    <string name="color">колiр</string>
+    <string name="gravity">гравiтацiя</string>
+    <string name="red">червоний</string>
+    <string name="blue">блакитний</string>
+    <string name="green">зелений</string>
+    <string name="left">злива</string>
+    <string name="center">в центрi</string>
+    <string name="right">зправа</string>
+    <string name="our_text">наш текст ... </string>
+</resources>
