@@ -1,6 +1,6 @@
 package com.example.less30;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,15 +11,10 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileUtils;
-import android.telecom.TelecomManager;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
@@ -32,7 +27,6 @@ import android.telephony.CellSignalStrengthWcdma;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -49,47 +43,41 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 
-import com.an.deviceinfo.device.model.Battery;
-import com.an.deviceinfo.device.model.Device;
-import com.an.deviceinfo.device.model.Memory;
-import com.an.deviceinfo.device.model.Network;
 import com.bosphere.filelogger.FL;
 import com.bosphere.filelogger.FLConfig;
 import com.bosphere.filelogger.FLConst;
-import com.bosphere.filelogger.FileFormatter;
-import com.bosphere.filelogger.Loggable;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
-import com.jcraft.jsch.SftpProgressMonitor;
-
-import org.apache.sshd.server.SshServer;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.util.EmptyStackException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableSource;
+import io.reactivex.rxjava3.core.Observer;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -174,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // requestWindowFeature(Window.FEATURE_NO_TITLE);
         // getWindow().addFlags(WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY);
 
-        initSftp();
+        //initSftp();
 
         setContentView(R.layout.activity_main);
         textView = findViewById(R.id.textView);
@@ -249,10 +237,72 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // result of the request.
             }
 
+        startRx();
+
+    }
+
+    private void startRx() {
+       /* Observable.timer(5000, TimeUnit.MILLISECONDS)
+                .repeat() //to perform your task every 5 seconds
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(aLong -> System.out.println("adfegs"));*/
+/*
+       Observable.interval(5, TimeUnit.SECONDS)
+                .flatMap(new Function<Long, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Long aLong) throws Throwable {
+                        System.out.println("!!! print1");
+                        return getDataObservable();
+                    }
+                })
+                .repeat()
+                .subscribe();*/
+
+       /* Observable
+                .interval(5, TimeUnit.SECONDS)
+                .doOnNext(n -> getSomething())
+                .subscribe();*/
+        startHandler();
+    }
+
+    private ObservableSource<?> getDataObservable() {
+        return new Observable<Object>() {
+            @Override
+            protected void subscribeActual(@NonNull Observer<? super Object> observer) {
+
+            }
+        };
+
+    }
+
+    private void startHandler() {
+
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
+
+        scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                initSftp();
+             //   System.out.println("! in scheduler " + System.currentTimeMillis());
+            }
+        },0,4, SECONDS);
+
+        //scheduledExecutorService.shutdown();
+    }
+
+    private void printTask() {
+        try {
+            Thread.sleep(2000);
+            System.out.println("! in sleep");
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void initSftp() {
-         String fileName = "task.json";
+        String fileName = "task.json";
         new AsyncTask<Void, Void, List<String>>() {
             @SuppressLint("StaticFieldLeak")
             @Override
@@ -277,7 +327,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int portNum = 22;
 
         JSch jsch = new JSch();
-        jsch.addIdentity();
+        // TODO *.Pem certificate?
+        // jsch.addIdentity();
+
         Session session = null;
 
         String knownHostsDir = "/root/es/pax/im30/FFFFFFFFFFFF/";
@@ -294,19 +346,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             session.setConfig("StrictHostKeyChecking", "no");
             session.setPassword(pass);
             session.connect();
-            System.out.println("!!! ISCONESCTED sesion " + session.isConnected());
+          //  System.out.println("!!! ISCONESCTED sesion " + session.isConnected());
 
             Channel channel = session.openChannel("sftp");
             channel.connect();
-            System.out.println("!!! ISCONESCTED channel" + channel.isConnected());
+         //   System.out.println("!!! ISCONESCTED channel" + channel.isConnected());
             ChannelSftp sftpChannel = (ChannelSftp) channel;
 
 
-
-           //sftpChannel.get( fileName);
+            //sftpChannel.get( fileName);
 
 // DOWNLOAD
-            InputStream stream =  sftpChannel.get("/root/es/pax/im30/FFFFFFFFFFFF/task.json");
+            InputStream stream = sftpChannel.get("/root/es/pax/im30/FFFFFFFFFFFF/task.json");
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 String result = new BufferedReader(new InputStreamReader(stream))
@@ -314,12 +365,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 System.out.println("RES - " + result);
             }
 
+
 // PUT
-            sftpChannel.put(new ByteArrayInputStream("Halo halo ".getBytes()),"/root/es/pax/im30/FFFFFFFFFFFF/11.txt");
+          //  sftpChannel.put(new ByteArrayInputStream("Halo halo ".getBytes()), "/root/es/pax/im30/FFFFFFFFFFFF/11.txt");
 
 // DELETE
-            sftpChannel.rm("/root/es/pax/im30/FFFFFFFFFFFF/11.txt");
-
+         //   sftpChannel.rm("/root/es/pax/im30/FFFFFFFFFFFF/11.txt");
 
 
             //Log.d(fileName, "has been downloaded");
@@ -327,17 +378,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             sftpChannel.exit();
             session.disconnect();
 
+
+
         } catch (JSchException e) {
             e.printStackTrace();
         } catch (SftpException e) {
             e.printStackTrace();
         }
     }
-
-
-
-
-
 
 
     @Override
